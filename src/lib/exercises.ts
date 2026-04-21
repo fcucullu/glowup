@@ -187,15 +187,25 @@ function simpleHash(str: string): number {
   return hash;
 }
 
-export function speakText(text: string) {
+// Speed: 1=slow, 2=normal, 3=fast, 4=very fast (max 1.25x - still understandable)
+const SPEED_MAP: Record<number, number> = { 1: 0.75, 2: 0.95, 3: 1.15, 4: 1.25 };
+
+export function speakText(text: string, speed: number = 2) {
   if (typeof window === 'undefined' || !window.speechSynthesis) return;
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = 'en-US';
-  utterance.rate = 0.85;
+  utterance.rate = SPEED_MAP[speed] ?? 0.95;
   utterance.pitch = 1;
   const voices = window.speechSynthesis.getVoices();
   const enVoice = voices.find(v => v.lang.startsWith('en-US'));
   if (enVoice) utterance.voice = enVoice;
   window.speechSynthesis.speak(utterance);
+}
+
+export function getSpeedForLevel(level: number): number {
+  if (level <= 1) return 1;
+  if (level <= 2) return 2;
+  if (level <= 3) return 3;
+  return 4;
 }
