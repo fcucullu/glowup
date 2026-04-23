@@ -6,8 +6,26 @@ import { getDailyExercises, speakText, type Exercise } from "@/lib/exercises";
 import { createClient } from "@/lib/supabase/client";
 import Celebration from "@/components/Celebration";
 
+function shuffleOptions(options: string[], seed: number): string[] {
+  const shuffled = [...options];
+  let s = seed;
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    s = (s * 1103515245 + 12345) & 0x7fffffff;
+    const j = s % (i + 1);
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 export default function DailyPage() {
-  const [exercises] = useState<Exercise[]>(() => getDailyExercises());
+  const [exercises] = useState<Exercise[]>(() => {
+    const daily = getDailyExercises();
+    const daySeed = Math.floor(Date.now() / 86400000);
+    return daily.map((ex, i) => ({
+      ...ex,
+      options: ex.options ? shuffleOptions(ex.options, daySeed + i) : ex.options,
+    }));
+  });
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [showResult, setShowResult] = useState(false);
