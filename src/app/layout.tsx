@@ -11,6 +11,21 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   title: "GlowUp — Inglés para profesionales de belleza",
   description: "Aprende inglés para recepción de clínicas de belleza. Ejercicios diarios, frases útiles y pronunciación.",
+  metadataBase: new URL("https://glowup.franciscocucullu.com"),
+  openGraph: {
+    title: "GlowUp",
+    description: "English for beauty clinic professionals — daily exercises, pronunciation practice, and essential phrases for reception, appointments and client care.",
+    url: "https://glowup.franciscocucullu.com",
+    siteName: "GlowUp",
+    type: "website",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GlowUp",
+    description: "English for beauty clinic professionals — daily exercises, pronunciation practice, and essential phrases.",
+    images: ["/og-image.jpg"],
+  },
 };
 
 export const viewport: Viewport = {
