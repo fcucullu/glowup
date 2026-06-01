@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import InstallPrompt from "@/components/InstallPrompt";
 
 export default function LoginPage() {
   const handleGoogleSignIn = async () => {
@@ -63,6 +64,8 @@ export default function LoginPage() {
         <p className="text-xs text-center" style={{ color: '#9e9e9e' }}>
           Al iniciar sesión, aceptas nuestros términos de uso
         </p>
+
+        <InstallPrompt />
       </div>
     </div>
   );

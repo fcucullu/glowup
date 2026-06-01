@@ -8,11 +8,22 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
+const DISMISS_KEY = "glowup_install_dismissed";
+
 export default function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has("reinstall")) localStorage.removeItem(DISMISS_KEY);
+    }
+
+    if (typeof window !== "undefined" && localStorage.getItem(DISMISS_KEY)) {
+      setDismissed(true);
+    }
+
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
@@ -52,7 +63,13 @@ export default function InstallPrompt() {
         <Download size={16} />
         Instalar
       </button>
-      <button onClick={() => setDismissed(true)} className="p-1">
+      <button
+        onClick={() => {
+          if (typeof window !== "undefined") localStorage.setItem(DISMISS_KEY, "1");
+          setDismissed(true);
+        }}
+        className="p-1"
+      >
         <X size={18} style={{ color: '#9e9e9e' }} />
       </button>
     </div>
